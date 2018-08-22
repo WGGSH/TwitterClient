@@ -16,7 +16,7 @@
 var tweetIDList = new Array();
 
 timelineLoad = function () {
-  const params = { count: 50 };
+  const params = { count: 200 };
   client.get('statuses/home_timeline', params, function (error, tweets, response) {
     if (!error) {
       console.log(tweets);
@@ -44,18 +44,25 @@ timelineLoad = function () {
 var tweetGenerate = function (tweet) {
   let html = '';
   html += '<div class="tweet">';
+
   html += '<img src="' + tweet.user.profile_image_url + '">';
   html += tweet.user.name + '(';
   html += '<a href = "http://twitter.com/' + tweet.user.screen_name + '">';
   html += '@' + tweet.user.screen_name + '</a>)  ';
+
+  html += '<a href = "http://twitter.com/' + tweet.user.screen_name + '/status/' + tweet.id_str + '">';
   html += tweet.created_at + '\n';
+  html += '</a>';
+
   html += tweet.text + '\n';
   // ここから画像
   if (tweet.extended_entities != null) {
     if (tweet.extended_entities.media != null) {
       for (let image of tweet.extended_entities.media) {
+        html += '<a href = "' + image.media_url + '">';
         html += '<img src="' + image.media_url +
-          '" width="' + image.sizes.thumb.w + '" height="' + image.sizes.thumb.h + '"> ';
+          '" width="' + parseInt(image.sizes.medium.w/image.sizes.medium.h*image.sizes.thumb.h) + '" height="' + image.sizes.thumb.h + '">';
+        html += '</a>  ';
       }
     }
   }
