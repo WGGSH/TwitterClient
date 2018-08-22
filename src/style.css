@@ -3,7 +3,7 @@
   margin: 0;
 }
 
-div{
+.tweet{
   background: #282c34;
   color: #fff;
   padding: 10px;
@@ -11,3 +11,9 @@ div{
   white-space: pre-wrap;
   word-wrap: break-word;
 }
+
+
+a:link { color: #0099ff; }
+a:visited { color: #cc00ff; }
+a:hover { color: #ff4400; }
+a:active { color: #ff8000; }

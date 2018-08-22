@@ -9,6 +9,7 @@ let mainWindow;
 function createWindow() {
   // メインウィンドウを作成します
   mainWindow = new BrowserWindow({ width: 800, height: 600 });
+  mainWindow.setKiosk(true);
 
   // メインウィンドウに表示するURLを指定します
   // （今回はmain.jsと同じディレクトリのindex.html）
@@ -24,7 +25,7 @@ function createWindow() {
 }
 
 //  初期化が完了した時の処理
-app.on('ready', createWindow);
+app.on('ready', createWindow)
 
 // 全てのウィンドウが閉じたときの処理
 app.on('window-all-closed', () => {

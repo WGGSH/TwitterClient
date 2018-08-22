@@ -19,7 +19,7 @@ timelineLoad = function () {
   const params = { count: 50 };
   client.get('statuses/home_timeline', params, function (error, tweets, response) {
     if (!error) {
-      // console.log(tweets);
+      console.log(tweets);
       let size = tweets.length;
       for (let i = size - 1; i >= 0;i--) {
         // まだTLに表示できていないツイートか確認する
@@ -44,11 +44,21 @@ timelineLoad = function () {
 var tweetGenerate = function (tweet) {
   let html = '';
   html += '<div class="tweet">';
+  html += '<img src="' + tweet.user.profile_image_url + '">';
   html += tweet.user.name + '(';
   html += '<a href = "http://twitter.com/' + tweet.user.screen_name + '">';
   html += '@' + tweet.user.screen_name + '</a>)  ';
   html += tweet.created_at + '\n';
-  html += tweet.text;
+  html += tweet.text + '\n';
+  // ここから画像
+  if (tweet.extended_entities != null) {
+    if (tweet.extended_entities.media != null) {
+      for (let image of tweet.extended_entities.media) {
+        html += '<img src="' + image.media_url +
+          '" width="' + image.sizes.thumb.w + '" height="' + image.sizes.thumb.h + '"> ';
+      }
+    }
+  }
   html += '</div>'
 
   document.getElementById('timeline').insertAdjacentHTML(
