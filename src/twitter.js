@@ -58,4 +58,4 @@ var tweetGenerate = function (tweet) {
 }
 
 timelineLoad();
-setInterval('timelineLoad()', 30000);
+setInterval('timelineLoad()', 65000);
