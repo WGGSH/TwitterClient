@@ -45,21 +45,37 @@ var tweetGenerate = function (tweet) {
   let html = '';
   html += '<div class="tweet">';
 
+  // アイコン
+  html += '<a href = "http://twitter.com/' + tweet.user.screen_name + '" target="_blank">';
   html += '<img src="' + tweet.user.profile_image_url + '">';
+  html += '</a>\n';
+
+  // スクリーンネーム
   html += tweet.user.name + '(';
-  html += '<a href = "http://twitter.com/' + tweet.user.screen_name + '">';
+  html += '<a href = "http://twitter.com/' + tweet.user.screen_name + '" target="_blank">';
   html += '@' + tweet.user.screen_name + '</a>)  ';
 
-  html += '<a href = "http://twitter.com/' + tweet.user.screen_name + '/status/' + tweet.id_str + '">';
+  // ツイート時刻
+  html += '<a href = "http://twitter.com/' + tweet.user.screen_name + '/status/' + tweet.id_str + '" target="_blank">';
   html += tweet.created_at + '\n';
   html += '</a>';
 
   html += tweet.text + '\n';
+
+  // ここからURL
+  if (tweet.entities.urls != null) {
+    for (let url of tweet.entities.urls) {
+      // console.log(url);
+      // console.log(url.url);
+      html += '<a href ="' + url.expanded_url + '" target="_blank">' + url.url + '</a>\n';
+    }
+  }
+
   // ここから画像
   if (tweet.extended_entities != null) {
     if (tweet.extended_entities.media != null) {
       for (let image of tweet.extended_entities.media) {
-        html += '<a href = "' + image.media_url + '">';
+        html += '<a href = "' + image.media_url + '" target="_blank">';
         html += '<img src="' + image.media_url +
           '" width="' + parseInt(image.sizes.medium.w/image.sizes.medium.h*image.sizes.thumb.h) + '" height="' + image.sizes.thumb.h + '">';
         html += '</a>  ';
@@ -75,4 +91,4 @@ var tweetGenerate = function (tweet) {
 }
 
 timelineLoad();
-setInterval('timelineLoad()', 65000);
+// setInterval('timelineLoad()', 65000);
