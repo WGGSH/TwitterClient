@@ -17,10 +17,9 @@
     "url": "https://github.com/WGGSH/TwitterClient/issues"
   },
   "homepage": "https://github.com/WGGSH/TwitterClient#readme",
-  "devDependencies": {
-    "electron": "^2.0.7"
-  },
+  "devDependencies": {},
   "dependencies": {
+    "electron": "^2.0.7",
     "twitter": "^1.7.1"
   }
 }

@@ -1,17 +1,7 @@
 // const twitter = require('twitter');
 // var client;
 
-// var stream = client.stream('user', function (stream) {
-//   stream.on('data', function (tweet) {
-//     console.log(tweet);
-//     document.getElementById('timeline').insertAdjacentHTML(
-//       'beforebegin', '<div>\n@' + tweet.user.screen_name + '\n' + tweet.text + '\n</div > ');
-//   })
-//   stream.on('error', function (e) {
-//     console.log(e);
-//     document.getElementById('timeline').insertAdjacentHTML('afterend', '<div>Error!</div>');
-//   })
-// })
+const fs = require('fs');
 
 var tweetIDList = new Array();
 
@@ -20,6 +10,7 @@ timelineLoad = function () {
   client.get('statuses/home_timeline', params, function (error, tweets, response) {
     if (!error) {
       console.log(tweets);
+      fs.writeFile('log.json', JSON.stringify(tweets, null, '    '));
       let size = tweets.length;
       for (let i = size - 1; i >= 0;i--) {
         // まだTLに表示できていないツイートか確認する
@@ -42,6 +33,13 @@ timelineLoad = function () {
 }
 
 var tweetGenerate = function (tweet) {
+  // RTか判別
+  if (tweet.retweeted_status != null) {
+    // RT
+    retweetGenerate(tweet);
+    return;
+  }
+
   let html = '';
   html += '<div class="tweet">';
 
@@ -82,12 +80,73 @@ var tweetGenerate = function (tweet) {
       }
     }
   }
+
+  // RT / Fav
+  html += '\n RT:' + tweet.retweet_count + '  Fav:' + tweet.favorite_count + '\n';
+
+
   html += '</div>'
 
   document.getElementById('timeline').insertAdjacentHTML(
     'afterbegin', html);
 
   tweetIDList.push(tweet.id_str);
+}
+
+var retweetGenerate = function (tweet) {
+  let html = '';
+  html += '<div class="tweet">';
+
+  // RTした人の名前表記
+  html += tweet.user.name + '(' + tweet.user.screen_name + ') Retweeted \n';
+  // アイコン
+  html += '<a href = "http://twitter.com/' + tweet.retweeted_status.user.screen_name + '" target="_blank">';
+  html += '<img src="' + tweet.retweeted_status.user.profile_image_url + '">';
+  html += '</a>\n';
+
+  // スクリーンネーム
+  html += tweet.retweeted_status.user.name + '(';
+  html += '<a href = "http://twitter.com/' + tweet.retweeted_status.user.screen_name + '" target="_blank">';
+  html += '@' + tweet.retweeted_status.user.screen_name + '</a>)  ';
+
+  // ツイート時刻
+  html += '<a href = "http://twitter.com/' + tweet.retweeted_status.user.screen_name + '/status/' + tweet.retweeted_status.id_str + '" target="_blank">';
+  html += tweet.retweeted_status.created_at + '\n';
+  html += '</a>';
+
+  html += tweet.retweeted_status.text + '\n';
+
+  // ここからURL
+  if (tweet.retweeted_status.entities.urls != null) {
+    for (let url of tweet.retweeted_status.entities.urls) {
+      // console.log(url);
+      // console.log(url.url);
+      html += '<a href ="' + url.expanded_url + '" target="_blank">' + url.url + '</a>\n';
+    }
+  }
+
+  // ここから画像
+  if (tweet.retweeted_status.extended_entities != null) {
+    if (tweet.retweeted_status.extended_entities.media != null) {
+      for (let image of tweet.retweeted_status.extended_entities.media) {
+        html += '<a href = "' + image.media_url + '" target="_blank">';
+        html += '<img src="' + image.media_url +
+          '" width="' + parseInt(image.sizes.medium.w / image.sizes.medium.h * image.sizes.thumb.h) + '" height="' + image.sizes.thumb.h + '">';
+        html += '</a>  ';
+      }
+    }
+  }
+
+  // RT / Fav
+  html += '\n RT:' + tweet.retweeted_status.retweet_count + '  Fav:' + tweet.retweeted_status.favorite_count + '\n';
+
+
+  html += '</div>'
+
+  document.getElementById('timeline').insertAdjacentHTML(
+    'afterbegin', html);
+
+  tweetIDList.push(tweet.id_str); 
 }
 
 timelineLoad();
