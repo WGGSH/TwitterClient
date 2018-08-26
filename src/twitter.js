@@ -44,6 +44,7 @@ var tweetGenerate = function (tweet) {
   html += '<div class="tweet">';
 
   // アイコン
+  html += '<div class = "user">';
   html += '<a href = "http://twitter.com/' + tweet.user.screen_name + '" target="_blank">';
   html += '<img src="' + tweet.user.profile_image_url + '">';
   html += '</a>\n';
@@ -57,6 +58,7 @@ var tweetGenerate = function (tweet) {
   html += '<a href = "http://twitter.com/' + tweet.user.screen_name + '/status/' + tweet.id_str + '" target="_blank">';
   html += tweet.created_at + '\n';
   html += '</a>';
+  html += '</div>'; // ユーザー表示終了
 
   html += tweet.text + '\n';
 
@@ -82,8 +84,9 @@ var tweetGenerate = function (tweet) {
   }
 
   // RT / Fav
+  html += '<div class = "RTLike">';
   html += '\n RT:' + tweet.retweet_count + '  Fav:' + tweet.favorite_count + '\n';
-
+  html += '</div>';
 
   html += '</div>'
 
@@ -98,7 +101,7 @@ var retweetGenerate = function (tweet) {
   html += '<div class="tweet">';
 
   // RTした人の名前表記
-  html += tweet.user.name + '(' + tweet.user.screen_name + ') Retweeted \n';
+  html += tweet.user.name + '(@' + tweet.user.screen_name + ') Retweeted \n';
   // アイコン
   html += '<a href = "http://twitter.com/' + tweet.retweeted_status.user.screen_name + '" target="_blank">';
   html += '<img src="' + tweet.retweeted_status.user.profile_image_url + '">';

@@ -12,6 +12,17 @@
   word-wrap: break-word;
 }
 
+.tweet .user{
+  padding: 0px 10px;
+  margin: 0px -10px;
+  border-bottom: inset 3px #0099ff;
+}
+
+.tweet .RTLike{
+  padding: 10px 10px;
+  margin: -20px -10px;
+  border-top: inset 3px #0099ff;
+}
 
 a:link { color: #0099ff; }
 a:visited { color: #cc00ff; }
